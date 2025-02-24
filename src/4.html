@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //문3
+      var p = [
+        (i, j) => i + j,
+        (i, j) => i - j,
+        (i, j) => i * j,
+        (i, j) => i / j,
+      ].map((i) => i(3, 4));
+      console.log(p);
+
+      // 문 4
+      var arr = [
+        { fn: (i, j) => i * j },
+        { fn: (i, j) => i * j + 1 },
+        { fn: (i, j) => i / j },
+        { fn: (i, j) => i + j - i },
+      ];
+
+      var res = arr.map((o) => o.fn(1, 3));
+
+      console.log(res);
+
+      // 문 5
+      const vr = (i) => {
+        var a = 0;
+        var b = 0;
+        for (var j = 0; j < i.length; j++) {
+          if (i[j] % 2 === 0) {
+            a += i[j];
+          } else {
+            b += i[j];
+          }
+        }
+        return { 짝: a, 홀: b };
+      };
+      var result = vr([2, 3, 4, 11, 34]);
+      console.log(result);
+    </script>
+  </body>
+</html>

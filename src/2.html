@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      var p = [[{ a: [20, 30, 40] }]];
+
+      var num = p[0][0].a[1];
+
+      // 문2)
+      var u = [{ a: (i, j) => i + j }];
+      console.log(u[0].a(10, 20));
+
+      // 문3)
+      u = [[{ a: [{ a: [1, 2, 3, 4] }] }]];
+
+      var a = u[0][0].a[0].a;
+      var sum = 0;
+
+      for (var i = 0; i < a.length; i++) {
+        sum += a[i];
+      }
+      console.log(sum);
+
+      // 문4) a와 b의 함수의 호출한 결과를 배열에 저장하세요. [a와 b의 합, a와 b의 합, a와 b의 합, a와 b의 합]
+
+      var u = [
+        { a: (i) => i * 5, b: (i) => i * 20 },
+        { a: (i) => i - 5, b: (i) => i - 20 },
+        { a: (i) => i / 5, b: (i) => i / 20 },
+        { a: (i) => i % 5, b: (i) => i % 20 },
+      ];
+
+      var num = 1;
+
+      var res = u.map((o) => o.a(num) + o.b(num));
+
+      console.log(res);
+
+      var arr = [
+        { a: "홍길동1" },
+        { a: "홍길동2" },
+        { a: "홍길동3" },
+        { a: "홍길동4" },
+      ];
+
+      for (var i = 0; i < arr.length; i++) {
+        console.log(arr);
+      }
+
+      for (var i of arr) {
+        console.log(i);
+      }
+
+      for (var i = 0; i < arr.length - 1; i++) {
+        console.log(arr[i].a);
+        console.log("==========" + (i + 1));
+      }
+
+      arr.forEach((item, i) => {
+        if (i < arr.length - 1) {
+          console.log(item.a);
+          console.log("==========" + (i + 1));
+        }
+      });
+
+      var love = "사랑";
+
+      for (var i = 0; i < 3; i++) {
+        console.log(love + (i + 1) * 2);
+      }
+
+      var arrN = ["사랑", "증오", "믿음"];
+      for (var i = 1; i <= 3; i++) {
+        var result = "";
+
+        for (var j = 0; j < arrN.length; j++) {
+          result += arrN[j] + i;
+
+          if (j < arrN.length - 1) {
+            result += " ";
+          }
+        }
+
+        console.log(result);
+      }
+    </script>
+  </body>
+</html>
