@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const f = (i, j) => i + j;
+
+      const g = (i) => {
+        // 고차함수
+        const v = (j) => i + j;
+
+        return v;
+      };
+      console.log(g(3)(7));
+      
+
+      const mult5 = (i) => i * 5;
+      const multl5 = (i) => i * 15;
+      const mult25 = (i) => i * 25;
+
+
+      const k = (i, f) => {
+        return f(i);
+      }
+
+      var result = [mult5, multl5, mult25].map((i) => k(3, i));
+      console.log(result);
+
+  
+  </script>
+  </body>
+</html>

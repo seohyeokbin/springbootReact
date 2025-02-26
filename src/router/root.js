@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import todoRouter from "./todoRouter";
 import productRouter from "./productRouter";
+import memberRouter from "./memberRouter";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -12,8 +13,6 @@ const ProductsIndex = lazy(() => import("../pages/products/IndexPage"));
 
 const GreenIndex = lazy(() => import("../pages/green/IndexPage"));
 const GreenList = lazy(() => import("../pages/green/ListPage"));
-
-
 
 const root = createBrowserRouter([
   {
@@ -72,6 +71,11 @@ const root = createBrowserRouter([
       </Suspense>
     ),
     children: productRouter(),
+  },
+
+  {
+    path: "member",
+    children: memberRouter(),
   },
 ]);
 export default root;

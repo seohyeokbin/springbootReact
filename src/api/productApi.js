@@ -1,4 +1,5 @@
 import axios from "axios";
+import jwtAxios from "../util/jwtUtil";
 
 const API_SERVER_HOST = "http://localhost:8080";
 const prefix = `${API_SERVER_HOST}/api/products`;
@@ -12,7 +13,7 @@ export const postAdd = async (productObj) => {
 
 export const getList = async (pageParam) => {
   const { page, size } = pageParam;
-  const res = await axios.get(`${prefix}/list`, { params: { page, size } });
+  const res = await jwtAxios.get(`${prefix}/list`, { params: { page, size } });
   return res.data;
 };
 
@@ -24,7 +25,7 @@ export const getOne = async (pno) => {
     return null;
   }
 
-  const res = await axios.get(`${API_SERVER_HOST}/api/products/${pno}`);
+  const res = await jwtAxios.get(`${API_SERVER_HOST}/api/products/${pno}`);
   return res.data;
 };
 

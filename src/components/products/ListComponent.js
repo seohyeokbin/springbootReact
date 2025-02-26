@@ -3,6 +3,7 @@ import { getList } from "../../api/productApi"; // API 호출을 위한 getList 
 import useCustomMove from "../../hooks/useCustomMove"; // 커스텀 훅을 불러와서 페이지네이션 관련 데이터(page, size)를 가져옴
 import PageComponent from "../common/PageComponent";
 import { API_SERVER_HOST } from "../../api/todoApi";
+import useCustomLogin from "../../hooks/useCustomLogin";
 
 const host = API_SERVER_HOST;
 
@@ -22,11 +23,15 @@ const initState = {
 
 // 리액트 함수형 컴포넌트 정의
 const ListComponent = () => {
+
+  const {exceptionHandle} = useCustomLogin()
+
   const { page, size, refresh, moveToList, moveToRead } = useCustomMove(); // useCustomMove 훅을 사용하여 현재 페이지와 페이지 크기를 가져옴
 
   console.log("✅ 현재 페이지 정보 - page:", page, "size:", size); // 현재 페이지와 페이지 크기를 콘솔에 출력
 
   // 서버에서 가져온 데이터를 저장할 상태 변수 설정 (초기값은 initState)
+  // serverData는 나중에 사용
   const [serverData, setServerData] = useState(initState);
 
   //for FetchingModal
@@ -48,9 +53,8 @@ const ListComponent = () => {
         setServerData(data); // 상태를 업데이트하여 화면을 리렌더링
         setFetching(false);
       })
-      .catch((error) => {
-        console.error("❌ 서버 데이터 가져오기 실패:", error);
-        setFetching(false);
+      .catch((err) => {
+        exceptionHandle(err)
       });
   }, [page, size, refresh]); // page 또는 size 값이 변경될 때마다 useEffect 실행
 

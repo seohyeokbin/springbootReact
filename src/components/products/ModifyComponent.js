@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { getOne } from "../../api/productApi";
 import FetchingModal from "../common/FetchingModal";
 
-import { API_SERVER_HOST } from "../../api/todoApi";
+import { API_SERVER_HOST, deleteOne, putOne } from "../../api/todoApi";
+import ResultModal from "../common/ResultModal";
+import useCustomMove from "../../hooks/useCustomMove";
+import { useParams } from "react-router-dom";
 const host = API_SERVER_HOST;
 const initState = {
   pno: 0,
@@ -12,15 +15,14 @@ const initState = {
   uploadFileNames: [],
 };
 
-
-
-
-const ReadComponent = ({ pno }) => {
+const ModifyComponent = ({pno}) => {
   //부모 component에서 props(객체) 로 전달됨
-  console.log("readcomponent", pno);
+  console.log("ModifyComponent", pno);
   const [product, setProduct] = useState(initState);
   const [fetching, setFetching] = useState(false);
+  const [result, setResult] = useState(false);
   const uploadRef = useRef();
+  const { moveToList, moveToRead } = useCustomMove();
 
   useEffect(() => {
     setFetching(true);
@@ -34,13 +36,62 @@ const ReadComponent = ({ pno }) => {
     product[e.target.name] = e.target.value;
     setProduct({ ...product });
   };
+  //p289
   const deleteOldImages = (imageName) => {
     console.log("이미지 삭제 ");
-    const resultFileNames = product.uploadFileNames;
+    const resultFileNames = product.uploadFileNames.filter(
+      (i) => i !== imageName
+    );
+    product.uploadFileNames = resultFileNames;
+    setProduct({ ...product });
   };
+  //p290
+  const handleClickModify = () => {
+    const files = uploadRef.current.fiels;
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+    //다른 데이터
+    formData.append("pname", product.pname);
+    formData.append("pdesc", product.pdesc);
+    formData.append("price", product.price);
+    formData.append("delFlag", product.delFlag);
+    //p293
+    for (let i = 0; i < product.uploadFileNames.length; i++) {
+      formData.append("uploadFileNames", product.uploadFileNames[i]);
+    }
+    setFetching(true);
+    putOne(pno, formData).then((i) => {
+      setResult("수정되었습니다");
+      setFetching(false);
+    });
+  };
+  const closeModal = () => {
+    if (result === "수정되었습니다") moveToRead(pno);
+    else if (result == "삭제되었습니다") moveToList({ page: 1 });
+    setResult(null);
+  };
+  const handleClickDelete = () => {
+    setFetching(true);
+    deleteOne(pno).then((data) => {
+      setResult("삭제되었어요");
+      setFetching(false);
+    });
+  };
+
   return (
     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
       {fetching ? <FetchingModal /> : <></>}
+      {result ? (
+        <ResultModal
+          title={`${result}`}
+          content={"정상적으로 처리되었습니다."}
+          callbackFn={closeModal}
+        />
+      ) : (
+        <></>
+      )}
       <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <div className="w-1/5 p-6 text-right font-bold"> 제품명</div>
@@ -108,99 +159,44 @@ const ReadComponent = ({ pno }) => {
                 key={index}
               >
                 <button
+                  type="button"
                   className="bg-blue-500 text-3xl text-white"
                   onClick={() => deleteOldImages(imgFile)}
                 >
                   삭제
                 </button>
+
                 <img alt="img" src={`${host}/api/products/view/s_${imgFile}`} />
               </div>
             ))}
           </div>
         </div>
       </div>
+      <div className="flex justify-end p-4">
+        <button
+          type="button"
+          className="inline-block rounded p-4 m-2 text-xl w-32 text-white bg-red-500 "
+          onClick={handleClickDelete}
+        >
+          삭제
+        </button>
+        <button
+          type="button"
+          className="inline-block rounded p-4 m-2 text-xl w-32 text-white bg-orange-500 "
+          onClick={handleClickModify}
+        >
+          수정
+        </button>
+        <button
+          type="button"
+          className="inline-block rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
+          onClick={moveToList}
+        >
+          목록
+        </button>
+      </div>
     </div>
   );
 };
-export default ReadComponent;
 
-// import React, { useEffect, useState } from "react";
-// import useCustomMove from "../../hooks/useCustomMove";
-// import { API_SERVER_HOST } from "../../api/todoApi";
-// import FetchingModal from "../common/FetchingModal";
-// import { getOne } from "../../api/productApi";
-
-// const initState = {
-//   pno: 0,
-//   pname: "",
-//   pdesc: "",
-//   price: 0,
-//   uploadFileNames: [],
-// };
-
-// const host = API_SERVER_HOST;
-
-// const ReadComponent = ({ pno }) => {
-//   //부모 component에서 props(객체)로 전달됨
-//   console.log("readCompnet", pno);
-//   const [product, setProduct] = useState(initState);
-//   const { moveToList, moveToModify } = useCustomMove();
-//   const [ fetching, setFetching ] = useState(false);
-
-//   useEffect(() => {
-//     setFetching(true);
-//     getOne(pno).then((data) => {
-//       console.log(data);
-//       setProduct(data);
-//       setFetching(false);
-//     });
-//   }, [pno]);
-
-//   return (
-//     <div className="border-2 border-sky-200 mt-10 m-2 p-4">
-//       {fetching ? <FetchingModal /> : <></>}
-//       {makeDiv("Pno", product.pno)}
-//       {makeDiv("Pname", product.pname)}
-//       {makeDiv("가격", product.price)}
-//       {makeDiv("상세설명", product.pdesc)}
-//       <div className="w-full justify-center flex flex-col m-auto items-center">
-//         {product.uploadFileNames.map((imgFile, index) => (
-//           <img
-//             alt="product"
-//             key={index}
-//             className="p-4 w-1/2"
-//             src={`${host}/api/products/view/${imgFile}`}
-//           />
-//         ))}
-//       </div>
-//       <div className="flex justify-end p-4">
-//         <button
-//           type="button"
-//           className="rounded p-4 m-2 text-xl text-white bg-blue-500"
-//           onClick={() => moveToList()}
-//         >
-//           목록
-//         </button>
-//         <button
-//           type="button"
-//           className="rounded p-4 m-2 text-xl text-white bg-blue-500"
-//           onClick={() => moveToModify(product.pno)}
-//         >
-//           수정
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-// const makeDiv = (title, value) => (
-//   <div className="flex justify-center">
-//     <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-//       <div className="w-1/5 p-6 text-right font-bold">{title}</div>
-//       <div className="w-4/5 p-6 rounded-r border border-solid shadow-md">
-//         {value}
-//       </div>
-//     </div>
-//   </div>
-// );
-
-// export default ReadComponent;
+export default ModifyComponent;

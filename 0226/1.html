@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function getData() {
+        return new Promise(function (resolve) {
+          // reject(new Error("요청이 실패함"));
+          resolve("사랑");
+        });
+      }
+      getData()
+        .then((i) => console.log(i + "입니다"))
+        .catch(function (e) {
+          console.log(e);
+        });
+    </script>
+  </body>
+</html>
+
+<!-- promise가 클래스 , 인자로 데이터 -->
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function getData(callback) {
+        // 데이터 요청이 실패했을 때 콜백 호출
+        callback(new Error("요청이 실패함"));
+      }
+
+      // 콜백 함수 사용
+      getData(function (error) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("요청 성공");
+        }
+      });
+    </script>
+  </body>
+</html> -->

@@ -5,11 +5,10 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
-import ReadComponent from "../../components/products/ModifyComponent";
-
+import ModifyComponent from "../../components/products/ModifyComponent";
 
 const ModifyPage = () => {
-  const { pno,page,size } = useParams();
+  const { pno, page, size } = useParams();
   const navigate = useNavigate();
   const [queryParams] = useSearchParams();
   const queryStr = createSearchParams({ page, size }).toString();
@@ -21,19 +20,17 @@ const ModifyPage = () => {
     [pno, page, size]
   );
   const moveToList = useCallback(() => {
-    navigate({ pathname: `/products/list`, search: queryStr });
+    navigate({ pathname: `/products/modify/${pno}`, search: queryStr });
   });
 
   return (
     <div className="text-extrabold w-full bg-white mt-6">
       <div className="text-3xl font-extrabold">
-        Todo Read Page Component{pno}
-        <ReadComponent tno={pno} a="홍길동"></ReadComponent>
+        Todo Modify Page Component{pno}
+        <ModifyComponent pno={pno} a="홍길동"></ModifyComponent>
       </div>
     </div>
   );
 };
 
 export default ModifyPage;
-
-
